@@ -1,0 +1,44 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowViewUsers",
+      "Effect": "Allow",
+      "Action": [
+        "iam:ListUsers",
+        "iam:GetUser",
+        "iam:ListAttachedUserPolicies",
+        "iam:ListGroupsForUser",
+        "iam:ListUserTags"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowCreateAndTagUsers",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateUser",
+        "iam:TagUser",
+        "iam:CreateLoginProfile"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ExplicitDenyDangerousUserAdminActions",
+      "Effect": "Deny",
+      "Action": [
+        "iam:DeleteUser",
+        "iam:AttachUserPolicy",
+        "iam:DetachUserPolicy",
+        "iam:PutUserPolicy",
+        "iam:DeleteUserPolicy",
+        "iam:CreateAccessKey",
+        "iam:DeleteAccessKey",
+        "iam:UpdateAccessKey",
+        "iam:AddUserToGroup",
+        "iam:RemoveUserFromGroup"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

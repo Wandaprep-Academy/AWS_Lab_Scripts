@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Afrobeats & Soukous Hub | Wandaprep Academy - S3 Module</title>
+<style>
+  :root{
+    --bg:#0b1020; --card:rgba(17,24,39,.7); --text:#eaf2ff; --muted:#b6c4e6; --accent:#7cf3ff; --accent2:#a78bfa; --line:rgba(122,139,189,.25);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";color:var(--text);background:var(--bg);overflow-x:hidden}
+  /* Floating gradient background */
+  .bgfx{position:fixed;inset:0;z-index:-1;background:
+    radial-gradient(800px 500px at 10% 10%, #1e3a8a40, transparent 60%),
+    radial-gradient(700px 500px at 90% 30%, #9333ea2a, transparent 60%),
+    radial-gradient(600px 400px at 70% 85%, #06b6d42b, transparent 60%);
+    filter:saturate(120%);
+  }
+  /* Animated ribbon */
+  .ribbon{
+    position:absolute; inset: -120px -40px auto -40px; height:320px; z-index:-1;
+    background:linear-gradient(90deg,#22d3ee33,#a78bfa33,#22d3ee33);
+    filter:blur(40px); border-radius:999px; animation:flow 12s ease-in-out infinite alternate;
+  }
+  @keyframes flow{to{transform:translateY(40px) scale(1.05)}}
+  /* Header + nav */
+  .wrap{max-width:1080px;margin:0 auto;padding:24px}
+  header{position:sticky;top:0;background:linear-gradient(180deg, rgba(11,16,32,.85), rgba(11,16,32,.55) 60%, transparent);backdrop-filter:saturate(130%) blur(6px);border-bottom:1px solid var(--line);z-index:10}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:.2px}
+  .logo{width:28px;height:28px;border-radius:10px;background:conic-gradient(from 220deg,#22d3ee,#a78bfa,#22d3ee);box-shadow:0 0 0 1px #ffffff20 inset}
+  nav{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+  nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:12px;border:1px solid transparent}
+  nav a:hover{color:var(--text);border-color:#ffffff1f;background:#ffffff10}
+  /* Banner */
+  .banner{background:linear-gradient(90deg,#22d3ee,#a78bfa);color:#0b1324;text-align:center;padding:10px 14px;font-weight:700}
+  /* Hero */
+  .hero{position:relative;display:grid;gap:22px;grid-template-columns:1.15fr .85fr;align-items:center;padding:28px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 20px 60px #0000005a}
+  .card-body{padding:20px}
+  h1{font-size:2.45rem;line-height:1.15;margin:0 0 10px}
+  p.lead{color:var(--muted);font-size:1.05rem;margin:0 0 4px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#22d3ee,#60efff);color:#00222a;text-decoration:none;font-weight:800;padding:12px 16px;border-radius:14px;box-shadow:0 10px 30px #0ff3ff33;transform:translateY(0);transition:transform .15s ease, box-shadow .2s ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 14px 38px #0ff3ff4a}
+  .btn.secondary{background:linear-gradient(180deg,#a78bfa,#c4b5fd);color:#1a0b2b;box-shadow:0 10px 30px #b699ff33}
+  ul.clean{padding-left:18px;margin:8px 0 0}
+  ul.clean li{margin:6px 0;color:#d5def7}
+  /* Feature tiles */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+  .tile{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:16px;padding:14px}
+  .tile h3{margin:0 0 6px;font-size:1.02rem}
+  .ico{width:22px;height:22px;border-radius:8px;background:conic-gradient(from 180deg,#22d3ee,#a78bfa,#22d3ee);display:inline-block;vertical-align:middle;margin-right:8px}
+  footer{opacity:.8;padding:28px;text-align:center;border-top:1px solid var(--line);margin-top:26px}
+  /* Responsive */
+  @media (max-width:980px){.hero{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div class="ribbon"></div>
+
+<!-- Training Banner -->
+<div class="banner">
+  This training is provided by <strong>Wandaprep Academy</strong> — You are currently in the <strong>AWS S3 Module</strong>.
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="logo"></span> Afrobeats & Soukous Hub</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="artists.html">Artists</a>
+      <a href="downloads.html">Downloads</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1> Wandaprep Tutorial to Build & Host a Stylish Static Site on S3</h1>
+      <p class="lead">Browse artists like Davido, Wizkid, Fally Ipupa, and Koffi Olomide. Hit <b>Download</b> to save an embedded poster image — perfect for showing S3 file delivery.</p>
+      <div class="cta">
+        <a class="btn" href="artists.html"><span class="ico"></span>View Artists</a>
+        <a class="btn secondary" href="downloads.html"><span class="ico"></span>Go to Downloads</a>
+      </div>
+      <div class="features">
+        <div class="tile"><h3><span class="ico"></span>Static Hosting</h3><div class="muted">Simple S3 website endpoint</div></div>
+        <div class="tile"><h3><span class="ico"></span>Public Reads</h3><div class="muted">Bucket policy demo</div></div>
+        <div class="tile"><h3><span class="ico"></span>File Delivery</h3><div class="muted">One-click downloads</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <svg viewBox="0 0 520 260" width="100%" height="240" style="border-radius:14px">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="520" height="260" fill="url(#g1)" opacity="0.25"/>
+          <g opacity="0.9">
+            <rect x="24" y="26" rx="12" width="472" height="50" fill="#0b1020" opacity="0.8"/>
+            <rect x="24" y="90" rx="12" width="472" height="144" fill="#0b1020" opacity="0.8"/>
+            <circle cx="56" cy="51" r="10" fill="#22d3ee"/>
+            <circle cx="84" cy="51" r="10" fill="#a78bfa"/>
+            <circle cx="112" cy="51" r="10" fill="#60efff"/>
+            <text x="40" y="132" fill="#eaf2ff" font-size="20" font-family="Segoe UI, Arial">S3 Website</text>
+            <text x="40" y="160" fill="#b6c4e6" font-size="14" font-family="Segoe UI, Arial">Index + Error docs, public-read policy, downloadable assets</text>
+          </g>
+        </svg>
+        <ul class="clean">
+          <li>Static website hosting on Amazon S3</li>
+          <li>Public bucket policies for website reads</li>
+          <li>Embedded images (no external files)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© Demo site for teaching S3 static hosting — Wandaprep Academy</footer>
+</body>
+</html>
