@@ -1,0 +1,172 @@
+#!/bin/bash
+# =====================================================================
+#  WandaPrep Academy - EC2 Lab
+#  AcmeBank (fictional) - Customer Mortgage Landing Page
+#  Amazon Linux 2023 user data: installs Apache and publishes the page
+# =====================================================================
+set -euxo pipefail
+
+# --- Install and start Apache -----------------------------------------
+dnf update -y
+dnf install -y httpd
+systemctl enable --now httpd
+
+# --- Instance metadata (IMDSv2) - shown on the page for lab demos -----
+TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" \
+  -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" || true)
+md() { curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
+  "http://169.254.169.254/latest/meta-data/$1" || echo "n/a"; }
+INSTANCE_ID=$(md instance-id)
+AZ=$(md placement/availability-zone)
+INSTANCE_TYPE=$(md instance-type)
+PRIVATE_IP=$(md local-ipv4)
+
+# --- Landing page ------------------------------------------------------
+cat > /var/www/html/index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AcmeBank Mortgages | WandaPrep Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--navy2:#132D52;--orange:#F97316;--purple:#7C3AED;--light:#F5F7FB;--text:#1E293B;--muted:#64748B;--white:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',Arial,sans-serif;color:var(--text);background:var(--light);line-height:1.6}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.lab-bar{background:linear-gradient(90deg,var(--purple),var(--orange));color:#fff;font-size:13px;text-align:center;padding:7px 12px;font-weight:500}
+nav{background:var(--navy);position:sticky;top:0;z-index:10}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;gap:10px}
+.logo span{width:34px;height:34px;border-radius:9px;background:var(--orange);display:grid;place-items:center;font-size:18px}
+.links{display:flex;gap:28px;color:#CBD5E1;font-size:14px}
+.links a:hover{color:#fff}
+.btn{display:inline-block;padding:12px 26px;border-radius:10px;font-weight:600;font-size:15px;transition:.2s;border:none;cursor:pointer;font-family:inherit}
+.btn-o{background:var(--orange);color:#fff}.btn-o:hover{background:#EA580C;transform:translateY(-2px)}
+.btn-g{border:2px solid rgba(255,255,255,.4);color:#fff}.btn-g:hover{border-color:#fff}
+.hero{background:radial-gradient(circle at 85% 20%,rgba(124,58,237,.45),transparent 45%),linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:80px 0 100px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
+.tag{display:inline-block;background:rgba(249,115,22,.15);color:#FDBA74;border:1px solid rgba(249,115,22,.4);padding:5px 14px;border-radius:30px;font-size:13px;margin-bottom:18px}
+h1{font-size:48px;line-height:1.15;font-weight:800;margin-bottom:18px}
+h1 em{font-style:normal;color:var(--orange)}
+.hero p{color:#CBD5E1;font-size:17px;margin-bottom:30px;max-width:520px}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.stats{display:flex;gap:36px;margin-top:40px}
+.stats b{display:block;font-size:26px;color:#fff}.stats small{color:#94A3B8;font-size:13px}
+.calc{background:#fff;color:var(--text);border-radius:18px;padding:30px;box-shadow:0 25px 60px rgba(0,0,0,.35)}
+.calc h3{font-size:20px;margin-bottom:4px}.calc>p{color:var(--muted);font-size:13px;margin-bottom:20px}
+.calc label{display:flex;justify-content:space-between;font-size:14px;font-weight:500;margin:14px 0 6px}
+.calc label output{color:var(--purple);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--orange)}
+.result{margin-top:22px;background:linear-gradient(135deg,var(--purple),#5B21B6);color:#fff;border-radius:12px;padding:18px;text-align:center}
+.result small{opacity:.85}.result strong{display:block;font-size:34px;font-weight:800}
+section{padding:80px 0}
+.head{text-align:center;max-width:620px;margin:0 auto 50px}
+.head h2{font-size:34px;color:var(--navy);margin-bottom:10px}.head p{color:var(--muted)}
+.eyebrow{color:var(--orange);font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:#fff;border-radius:16px;padding:30px;border:1px solid #E2E8F0;transition:.25s}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(11,31,58,.12);border-color:var(--orange)}
+.icon{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-size:24px;margin-bottom:18px;background:#FFF1E6}
+.card:nth-child(2) .icon{background:#F1EAFE}.card:nth-child(3) .icon{background:#E6EEF9}
+.card h3{color:var(--navy);margin-bottom:8px}.card p{color:var(--muted);font-size:14px;margin-bottom:14px}
+.rate{font-size:28px;font-weight:800;color:var(--purple)}.rate small{font-size:13px;color:var(--muted);font-weight:500}
+.steps{background:#fff}
+.step{text-align:center;padding:10px}
+.num{width:56px;height:56px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:20px;display:grid;place-items:center;margin:0 auto 16px;border:4px solid #FED7AA}
+.step h3{color:var(--navy);margin-bottom:6px}.step p{color:var(--muted);font-size:14px}
+.band{background:linear-gradient(135deg,var(--purple),var(--navy));color:#fff;border-radius:22px;padding:50px;display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
+.band h2{font-size:30px}.band p{color:#DDD6FE}
+.infra{background:var(--navy);color:#CBD5E1;border-radius:14px;padding:22px 26px;margin-top:40px;font-size:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.infra div b{display:block;color:var(--orange);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.infra code{color:#fff;font-family:Consolas,monospace}
+footer{background:var(--navy);color:#94A3B8;padding:40px 0;font-size:13px;text-align:center}
+footer strong{color:#fff}footer .wp{color:var(--orange);font-weight:600}
+@media(max-width:900px){.hero .wrap,.grid{grid-template-columns:1fr}.links{display:none}h1{font-size:36px}.infra{grid-template-columns:1fr 1fr}.band{padding:32px}}
+</style>
+</head>
+<body>
+<div class="lab-bar">🎓 WandaPrep Academy Cloud Lab · AcmeBank is a fictional bank used for training purposes only</div>
+
+<nav><div class="wrap">
+  <a class="logo" href="#"><span>A</span>AcmeBank</a>
+  <div class="links"><a href="#products">Mortgages</a><a href="#how">How it works</a><a href="#calc">Calculator</a><a href="#infra">Lab info</a></div>
+  <a class="btn btn-o" href="#calc">Get started</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <div class="tag">🏡 Rates from 4.19% · Decision in principle in 10 mins</div>
+    <h1>The home you want, with a mortgage that <em>fits your life.</em></h1>
+    <p>Whether you're buying your first home, moving up or remortgaging, AcmeBank gives you clear rates, no hidden fees and a dedicated mortgage adviser from start to keys.</p>
+    <div class="cta"><a class="btn btn-o" href="#calc">Calculate repayments</a><a class="btn btn-g" href="#products">Explore mortgages</a></div>
+    <div class="stats"><div><b>120k+</b><small>Homeowners helped</small></div><div><b>4.8★</b><small>Customer rating</small></div><div><b>£0</b><small>Arrangement fee options</small></div></div>
+  </div>
+  <div class="calc" id="calc">
+    <h3>Mortgage calculator</h3><p>Estimate your monthly repayment in seconds.</p>
+    <label>Property price <output id="pv">£300,000</output></label><input type="range" id="price" min="50000" max="1500000" step="5000" value="300000">
+    <label>Deposit <output id="dv">£30,000</output></label><input type="range" id="dep" min="0" max="500000" step="1000" value="30000">
+    <label>Interest rate <output id="rv">4.19%</output></label><input type="range" id="rate" min="1" max="10" step="0.01" value="4.19">
+    <label>Term <output id="tv">25 years</output></label><input type="range" id="term" min="5" max="40" step="1" value="25">
+    <div class="result"><small>Estimated monthly repayment</small><strong id="pay">£1,453</strong><small id="ltv">Loan £270,000 · LTV 90%</small></div>
+  </div>
+</div></header>
+
+<section id="products"><div class="wrap">
+  <div class="head"><div class="eyebrow">Our mortgages</div><h2>A mortgage for every stage</h2><p>Fixed, tracker and first-time buyer products designed around real customers.</p></div>
+  <div class="grid">
+    <div class="card"><div class="icon">🔑</div><h3>First-Time Buyer</h3><p>Borrow up to 95% LTV with cashback towards your moving costs.</p><div class="rate">4.49% <small>2-yr fixed</small></div></div>
+    <div class="card"><div class="icon">🏠</div><h3>Home Mover</h3><p>Port your existing deal or borrow more for your next move.</p><div class="rate">4.19% <small>5-yr fixed</small></div></div>
+    <div class="card"><div class="icon">🔄</div><h3>Remortgage</h3><p>Switch to AcmeBank with free valuation and free legal work.</p><div class="rate">4.29% <small>Tracker</small></div></div>
+  </div>
+</div></section>
+
+<section class="steps" id="how"><div class="wrap">
+  <div class="head"><div class="eyebrow">How it works</div><h2>From application to keys in 4 steps</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="step"><div class="num">1</div><h3>Check</h3><p>Use our calculator to see what you could borrow.</p></div>
+    <div class="step"><div class="num">2</div><h3>Agree</h3><p>Get a decision in principle with no credit impact.</p></div>
+    <div class="step"><div class="num">3</div><h3>Apply</h3><p>Your adviser guides you through the full application.</p></div>
+    <div class="step"><div class="num">4</div><h3>Move in</h3><p>We release the funds and you get your keys.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="band"><div><h2>Speak to a mortgage adviser today</h2><p>Free, no-obligation advice, 7 days a week.</p></div><a class="btn btn-o" href="#calc">Book an appointment</a></div>
+  <div class="infra" id="infra">
+    <div><b>Instance ID</b><code>__INSTANCE_ID__</code></div>
+    <div><b>Availability Zone</b><code>__AZ__</code></div>
+    <div><b>Instance Type</b><code>__INSTANCE_TYPE__</code></div>
+    <div><b>Private IP</b><code>__PRIVATE_IP__</code></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><strong>AcmeBank</strong> is a fictional brand. Rates shown are illustrative only.</p>
+  <p style="margin-top:6px">Served by Apache on Amazon EC2 · Built for <span class="wp">WandaPrep Academy</span> · wandaprepacademy.com</p>
+</div></footer>
+
+<script>
+const $=id=>document.getElementById(id),gbp=n=>'£'+Math.round(n).toLocaleString('en-GB');
+function calc(){
+  const p=+$('price').value,d=Math.min(+$('dep').value,p),r=+$('rate').value/1200,n=+$('term').value*12,loan=p-d;
+  const pay=r?loan*r/(1-Math.pow(1+r,-n)):loan/n;
+  $('pv').textContent=gbp(p);$('dv').textContent=gbp(d);$('rv').textContent=(+$('rate').value).toFixed(2)+'%';$('tv').textContent=$('term').value+' years';
+  $('pay').textContent=gbp(pay);$('ltv').textContent='Loan '+gbp(loan)+' · LTV '+(p?Math.round(loan/p*100):0)+'%';
+}
+['price','dep','rate','term'].forEach(i=>$(i).addEventListener('input',calc));calc();
+</script>
+</body>
+</html>
+EOF
+
+# --- Inject instance metadata into the page ---------------------------
+sed -i -e "s|__INSTANCE_ID__|${INSTANCE_ID}|" \
+       -e "s|__AZ__|${AZ}|" \
+       -e "s|__INSTANCE_TYPE__|${INSTANCE_TYPE}|" \
+       -e "s|__PRIVATE_IP__|${PRIVATE_IP}|" /var/www/html/index.html
+
+chown apache:apache /var/www/html/index.html
+systemctl restart httpd
