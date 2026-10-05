@@ -1,0 +1,10 @@
+Amazon S3 provides object storage with 11 nines (99.999999999%) durability.
+Storage classes: Standard, Intelligent-Tiering, Standard-IA, One Zone-IA, Glacier.
+
+AWS Lambda is serverless compute. Pay per invocation and per GB-second.
+Lambda supports Python 3.12, Node.js 20, Java 21. Max timeout: 15 minutes.
+Memory: 128MB to 10GB. Free tier: 1 million invocations per month.
+
+Amazon DynamoDB is a serverless NoSQL database.
+Supports single-digit millisecond performance at any scale.
+Key concepts: partition key, sort key, Global Secondary Index (GSI).

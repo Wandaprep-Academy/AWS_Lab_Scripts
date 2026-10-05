@@ -1,0 +1,20 @@
+{
+  "detail": {
+    "configRuleName": "encrypted-volumes",
+    "resourceId": "vol-05b7d66dace883633"
+  }
+}
+
+
+
+
+
+
+
+
+{
+  "detail": {
+    "configRuleName": "cloudtrail-enabled",
+    "resourceId": "management-events"
+  }
+}

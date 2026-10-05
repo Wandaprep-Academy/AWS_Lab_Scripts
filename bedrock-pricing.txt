@@ -1,0 +1,8 @@
+Amazon Bedrock charges per token. No minimum fees or upfront costs.
+
+Claude 3.5 Sonnet: $0.003 per 1K input tokens, $0.015 per 1K output tokens.
+Claude 3 Haiku: $0.00025 per 1K input tokens, $0.00125 per 1K output tokens.
+Amazon Titan Text Express: $0.0002 per 1K input, $0.0006 per 1K output.
+
+Knowledge Bases: $0.10 per 1,000 retrieval queries.
+OpenSearch Serverless (vector store): charged by OCU-hour.
